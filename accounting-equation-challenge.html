@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Accounting Equation Challenge</title>
+  <style>
+    :root{--green:#075f3f;--green2:#e8f5ee;--gold:#f4b942;--ink:#17211c;--muted:#5b6962;--line:#d8e1dc;--bg:#f4f7f5;--white:#fff;--bad:#a92727;--badbg:#fff0f0;--good:#087443;--goodbg:#eaf8f0}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.45}
+    .page{max-width:1050px;margin:auto;padding:24px 16px 48px}.hero{background:linear-gradient(135deg,#064b34,var(--green));color:#fff;padding:24px;border-radius:16px;box-shadow:0 8px 24px #0b4c3422}.hero h1{margin:0 0 5px;font-size:clamp(1.65rem,4vw,2.35rem)}.hero p{margin:0;color:#e4f2eb}.topline{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-top:18px;font-weight:700}.progress-track{height:10px;background:#ffffff40;border-radius:99px;overflow:hidden;margin-top:9px}.progress{height:100%;width:5%;background:var(--gold);transition:width .25s}
+    .card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:20px;margin-top:16px;box-shadow:0 3px 12px #163b2510}.label{text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-size:.75rem;font-weight:800}.phrase{font-size:1.3rem;font-weight:750;margin-top:8px}.answers{display:grid;grid-template-columns:1fr 1fr;gap:16px}.answer h2{font-size:1.05rem;margin:0 0 12px}.answer label.title{font-size:.9rem;font-weight:700;display:block;margin-bottom:5px}select{width:100%;min-height:46px;padding:8px 10px;border:1px solid #aebbb4;border-radius:8px;background:#fff;color:var(--ink);font-size:1rem}.radios{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.radio{display:flex;align-items:center;gap:8px;min-height:46px;padding:8px 10px;border:1px solid #aebbb4;border-radius:8px;cursor:pointer}.radio:has(input:checked){border:2px solid var(--green);background:var(--green2)}input{accent-color:var(--green)}
+    .buttons{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}button{min-height:46px;border-radius:9px;padding:10px 18px;border:1px solid #9ca9a2;background:#fff;color:var(--ink);font-weight:750;font-size:1rem;cursor:pointer}button.primary{background:var(--green);border-color:var(--green);color:#fff}button:hover{filter:brightness(.97)}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #e1a30d;outline-offset:2px}button[hidden]{display:none}.feedback{margin-top:14px;border:1px solid var(--line);border-radius:10px;padding:13px;background:#fafcfb}.feedback.good{color:var(--good);border-color:#78c99e;background:var(--goodbg)}.feedback.bad{color:var(--bad);border-color:#e2a2a2;background:var(--badbg)}
+    .equation{display:grid;grid-template-columns:1fr auto 2.1fr;align-items:center;gap:12px;margin-top:14px}.op{font-size:1.6rem;font-weight:800;text-align:center}.right{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}.total{border:2px solid var(--line);border-radius:12px;padding:15px 8px;text-align:center;background:#fff}.total strong{display:block;font-size:1.45rem;color:var(--green);margin-top:3px}.balance{text-align:center;font-size:1.05rem;font-weight:800;margin-top:11px}.accounts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}.accounts h3{font-size:1rem;border-bottom:2px solid var(--green);padding-bottom:5px;margin:0 0 4px}.row{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding:7px 2px}.row.changed{background:#fff3c9;font-weight:800;border-radius:5px;padding-left:6px;padding-right:6px}.complete{text-align:center;padding:18px}.complete h2{color:var(--green);font-size:2rem;margin:0 0 5px}.note{font-size:.86rem;color:var(--muted);margin-top:13px}
+    @media(max-width:700px){.answers,.accounts{grid-template-columns:1fr}.equation{grid-template-columns:1fr}.equation>.op{line-height:1}.right{grid-template-columns:1fr auto 1fr}.page{padding:12px 10px 32px}.card{padding:15px}.topline{align-items:flex-start;flex-direction:column;gap:4px}}
+    @media print{body{background:#fff}.buttons,.answer,.progress-track{display:none}.card,.hero{box-shadow:none}.hero{color:#000;background:#fff;border:2px solid #000}.hero p{color:#000}}
+  </style>
+</head>
+<body>
+<main class="page">
+  <header class="hero">
+    <h1>Accounting Equation Challenge</h1>
+    <p>Identify both account changes and keep Assets = Liabilities + Owner's Equity balanced.</p>
+    <div class="topline"><span>Transaction <span id="qNum">1</span> of 20</span><span>Score: <span id="score">0</span>/20</span></div>
+    <div class="progress-track"><div id="progress" class="progress"></div></div>
+  </header>
+
+  <section class="card" aria-labelledby="transactionLabel">
+    <div class="label" id="transactionLabel">Business Transaction</div>
+    <div id="phrase" class="phrase"></div>
+  </section>
+
+  <section class="answers" id="answerArea">
+    <div class="card answer"><h2>First Account</h2><label class="title" for="acct1">Account</label><select id="acct1"></select><div class="radios"><label class="radio"><input type="radio" name="dir1" value="inc"> Increase (+)</label><label class="radio"><input type="radio" name="dir1" value="dec"> Decrease (−)</label></div></div>
+    <div class="card answer"><h2>Second Account</h2><label class="title" for="acct2">Account</label><select id="acct2"></select><div class="radios"><label class="radio"><input type="radio" name="dir2" value="inc"> Increase (+)</label><label class="radio"><input type="radio" name="dir2" value="dec"> Decrease (−)</label></div></div>
+  </section>
+
+  <div class="buttons"><button id="check" class="primary" type="button">Check My Answer</button><button id="next" type="button" hidden>Next Transaction →</button><button id="restart" type="button">Start Over</button></div>
+  <div id="feedback" class="feedback" role="status" aria-live="polite">Choose two accounts and decide whether each increases or decreases.</div>
+
+  <section class="card">
+    <div class="label" style="text-align:center">Accounting Equation</div>
+    <div class="equation"><div class="total"><span>ASSETS</span><strong id="aTotal">$0</strong></div><div class="op">=</div><div class="right"><div class="total"><span>LIABILITIES</span><strong id="lTotal">$0</strong></div><div class="op">+</div><div class="total"><span>OWNER'S EQUITY</span><strong id="eTotal">$0</strong></div></div></div>
+    <div id="balanced" class="balance">$0 = $0 + $0 ✓</div>
+  </section>
+
+  <section class="card"><h2 style="font-size:1.1rem;margin-top:0">Running Account Balances</h2><div class="accounts"><div><h3>Assets</h3><div id="assets"></div></div><div><h3>Liabilities</h3><div id="liabs"></div></div><div><h3>Owner's Equity</h3><div id="equity"></div></div></div><p class="note">Expenses and Owner's Withdrawals reduce Owner's Equity, so they appear as negative amounts in the running balances.</p></section>
+</main>
+<script>
+(() => {
+  const names={cash:'Cash',ar:'Accounts Receivable',supplies:'Supplies',equipment:'Equipment',ap:'Accounts Payable',capital:"Owner's Capital",revenue:'Revenue',expense:'Expenses',withdrawals:"Owner's Withdrawals"};
+  const questions=[
+    {text:'The owner invests $20,000 cash to start the business.',amount:20000,a:'cash',ad:'inc',b:'capital',bd:'inc'},
+    {text:'The business purchases $4,000 of equipment with cash.',amount:4000,a:'equipment',ad:'inc',b:'cash',bd:'dec'},
+    {text:'The business purchases $2,500 of supplies on account.',amount:2500,a:'supplies',ad:'inc',b:'ap',bd:'inc'},
+    {text:'The business borrows $8,000 from a bank and receives cash.',amount:8000,a:'cash',ad:'inc',b:'ap',bd:'inc'},
+    {text:'The business earns $3,000 cash for services provided to customers.',amount:3000,a:'cash',ad:'inc',b:'revenue',bd:'inc'},
+    {text:'The business provides $1,800 of services to a customer on account.',amount:1800,a:'ar',ad:'inc',b:'revenue',bd:'inc'},
+    {text:'A customer pays $1,000 of the amount previously owed to the business.',amount:1000,a:'cash',ad:'inc',b:'ar',bd:'dec'},
+    {text:'The business pays $1,200 with cash toward an amount owed to a supplier.',amount:1200,a:'ap',ad:'dec',b:'cash',bd:'dec'},
+    {text:'The business pays $900 cash for rent.',amount:900,a:'expense',ad:'inc',b:'cash',bd:'dec'},
+    {text:'The owner withdraws $600 cash from the business for personal use.',amount:600,a:'withdrawals',ad:'inc',b:'cash',bd:'dec'},
+    {text:'The business purchases $3,500 of equipment on account.',amount:3500,a:'equipment',ad:'inc',b:'ap',bd:'inc'},
+    {text:'The business earns $2,400 cash from customers for services provided.',amount:2400,a:'cash',ad:'inc',b:'revenue',bd:'inc'},
+    {text:'The business pays $700 cash for advertising.',amount:700,a:'expense',ad:'inc',b:'cash',bd:'dec'},
+    {text:'The business collects $800 from a customer who previously received services on account.',amount:800,a:'cash',ad:'inc',b:'ar',bd:'dec'},
+    {text:'The business pays $2,000 cash toward its bank loan.',amount:2000,a:'ap',ad:'dec',b:'cash',bd:'dec'},
+    {text:'The business purchases $1,100 of supplies with cash.',amount:1100,a:'supplies',ad:'inc',b:'cash',bd:'dec'},
+    {text:'The business provides $2,200 of services on account.',amount:2200,a:'ar',ad:'inc',b:'revenue',bd:'inc'},
+    {text:'The business pays $500 cash for utilities.',amount:500,a:'expense',ad:'inc',b:'cash',bd:'dec'},
+    {text:'The owner contributes an additional $5,000 cash to the business.',amount:5000,a:'cash',ad:'inc',b:'capital',bd:'inc'},
+    {text:'The business pays $1,300 cash toward an outstanding Accounts Payable balance.',amount:1300,a:'ap',ad:'dec',b:'cash',bd:'dec'}
+  ];
+  const initial=()=>({cash:0,ar:0,supplies:0,equipment:0,ap:0,capital:0,revenue:0,expense:0,withdrawals:0});
+  let index=0,score=0,answered=false,state=initial(),changed=[];
+  const $=s=>document.querySelector(s), money=n=>(n<0?'−':'')+'$'+Math.abs(n).toLocaleString('en-US');
+  const optionHtml='<option value="">Choose an account...</option>'+Object.entries(names).map(([k,v])=>`<option value="${k}">${v}</option>`).join('');
+  $('#acct1').innerHTML=optionHtml; $('#acct2').innerHTML=optionHtml;
+  function totals(){return{a:state.cash+state.ar+state.supplies+state.equipment,l:state.ap,e:state.capital+state.revenue-state.expense-state.withdrawals}}
+  function row(key,value){return `<div class="row ${changed.includes(key)?'changed':''}"><span>${names[key]}</span><strong>${money(value)}</strong></div>`}
+  function render(){
+    const t=totals(); $('#aTotal').textContent=money(t.a); $('#lTotal').textContent=money(t.l); $('#eTotal').textContent=money(t.e); $('#balanced').textContent=`${money(t.a)} = ${money(t.l)} + ${money(t.e)} ${t.a===t.l+t.e?'✓':'✕'}`;
+    $('#assets').innerHTML=row('cash',state.cash)+row('ar',state.ar)+row('supplies',state.supplies)+row('equipment',state.equipment);
+    $('#liabs').innerHTML=row('ap',state.ap);
+    $('#equity').innerHTML=row('capital',state.capital)+row('revenue',state.revenue)+row('expense',-state.expense)+row('withdrawals',-state.withdrawals);
+    $('#score').textContent=score; $('#qNum').textContent=Math.min(index+1,20); $('#progress').style.width=((index+1)/20*100)+'%';
+  }
+  function setFeedback(html,type=''){const f=$('#feedback');f.innerHTML=html;f.className='feedback'+(type?' '+type:'')}
+  function load(){answered=false;changed=[];$('#phrase').textContent=questions[index].text;$('#acct1').value='';$('#acct2').value='';document.querySelectorAll('input[type=radio]').forEach(x=>x.checked=false);setFeedback('Choose two accounts and decide whether each increases or decreases.');$('#check').hidden=false;$('#next').hidden=true;render()}
+  function dir(group){return document.querySelector(`input[name="${group}"]:checked`)?.value||''}
+  function samePair(a1,d1,a2,d2,q){return (a1===q.a&&d1===q.ad&&a2===q.b&&d2===q.bd)||(a1===q.b&&d1===q.bd&&a2===q.a&&d2===q.ad)}
+  $('#check').addEventListener('click',()=>{
+    if(answered)return; const a1=$('#acct1').value,a2=$('#acct2').value,d1=dir('dir1'),d2=dir('dir2');
+    if(!a1||!a2||!d1||!d2){setFeedback('<strong>Complete all four choices before checking.</strong>','bad');return}
+    if(a1===a2){setFeedback('<strong>Choose two different accounts for this transaction.</strong>','bad');return}
+    const q=questions[index]; if(!samePair(a1,d1,a2,d2,q)){setFeedback('<strong>Not quite.</strong> Think about what the business received or gave up, and which other account must change. Try again.','bad');return}
+    answered=true;score++; [[q.a,q.ad],[q.b,q.bd]].forEach(([key,direction])=>state[key]+=direction==='inc'?q.amount:-q.amount); changed=[q.a,q.b];
+    setFeedback(`<strong>Correct! ✓</strong> ${names[q.a]} ${q.ad==='inc'?'increases':'decreases'} by ${money(q.amount)}, and ${names[q.b]} ${q.bd==='inc'?'increases':'decreases'} by ${money(q.amount)}. The accounting equation remains balanced.`,'good');
+    $('#check').hidden=true;$('#next').hidden=false;$('#next').textContent=index===19?'See Final Score':'Next Transaction →';render();
+  });
+  $('#next').addEventListener('click',()=>{if(index<19){index++;load();scrollTo({top:0,behavior:'smooth'})}else{$('#phrase').innerHTML=`<div class="complete"><h2>Activity Complete!</h2><p>Your final score is <strong>${score}/20</strong>.</p><p>${score===20?'Excellent work—you correctly analyzed all 20 transactions!':'Select Start Over to practice again.'}</p></div>`;$('#answerArea').hidden=true;$('#next').hidden=true;$('#check').hidden=true;setFeedback('<strong>Finished!</strong> Show this screen to your instructor or follow the submission directions in Canvas.','good');$('#progress').style.width='100%'}});
+  $('#restart').addEventListener('click',()=>{index=0;score=0;state=initial();changed=[];$('#answerArea').hidden=false;load();scrollTo({top:0,behavior:'smooth'})});
+  load();
+})();
+</script>
+</body>
+</html>
